@@ -1,0 +1,538 @@
+// ─── Design Tokens ───────────────────────────────────────────────────────────
+$bg-deep:        #0a0a0f;
+$bg-surface:     #10101a;
+$bg-surface-alt: #0d0d18;
+$accent:         #6366f1;
+$accent-dim:     rgba(99, 102, 241, 0.12);
+$accent-border:  rgba(99, 102, 241, 0.25);
+$green:          #22c55e;
+$green-dim:      rgba(34, 197, 94, 0.06);
+$green-border:   rgba(34, 197, 94, 0.18);
+$red-error:      #f87171;
+$text-primary:   #f0f0f8;
+$text-secondary: #c0c0d0;
+$text-muted:     #6b6b82;
+$text-dim:       #3a3a52;
+$font-display:   'Space Grotesk', 'Inter', system-ui, sans-serif;
+$font-body:      'Inter', system-ui, sans-serif;
+$font-mono:      'JetBrains Mono', 'Fira Code', monospace;
+
+// ─── Breakpoints ─────────────────────────────────────────────────────────────
+$bp-lg: 1024px;
+$bp-md: 768px;
+$bp-sm: 480px;
+
+// ─── Animations ──────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes successPop {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  50%       { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
+.contact {
+  position: relative;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 120px 56px 100px;
+  background: $bg-deep;
+
+  // Consistent separator
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 56px; right: 56px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(99, 102, 241, 0.3) 30%,
+      rgba(99, 102, 241, 0.3) 70%,
+      transparent 100%
+    );
+  }
+
+  @media (max-width: $bp-md) {
+    padding: 80px 32px 80px;
+    &::before { left: 32px; right: 32px; }
+  }
+
+  @media (max-width: $bp-sm) {
+    padding: 64px 20px 64px;
+    &::before { left: 20px; right: 20px; }
+  }
+
+  // ── Centered header ────────────────────────────────────────────────────
+  &__header {
+    text-align: center;
+    max-width: 580px;
+    margin: 0 auto 56px;
+    opacity: 0;
+    transform: translateY(24px);
+
+    &--visible {
+      animation: fadeSlideUp 0.6s ease 0s both;
+
+      .contact__eyebrow     { animation: fadeSlideUp 0.5s ease 0.05s both; }
+      .contact__heading     { animation: fadeSlideUp 0.6s ease 0.12s both; }
+      .contact__description { animation: fadeSlideUp 0.5s ease 0.22s both; }
+    }
+  }
+
+  // ── Eyebrow with flanking lines ─────────────────────────────────────────
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $accent;
+    margin-bottom: 20px;
+    opacity: 0;
+
+    &::before,
+    &::after {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: $accent;
+      flex-shrink: 0;
+    }
+  }
+
+  // ── Heading ─────────────────────────────────────────────────────────────
+  &__heading {
+    font-family: $font-display;
+    font-size: clamp(36px, 5.5vw, 56px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: $text-primary;
+    margin-bottom: 16px;
+    opacity: 0;
+  }
+
+  &__heading-accent {
+    color: $accent;
+    font-style: italic;
+  }
+
+  // ── Description ─────────────────────────────────────────────────────────
+  &__description {
+    font-size: 14px;
+    line-height: 1.8;
+    color: $text-muted;
+    opacity: 0;
+
+    strong { color: $text-secondary; font-weight: 500; }
+  }
+
+  // ── Two-column grid ──────────────────────────────────────────────────────
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 24px;
+    align-items: start;
+
+    @media (max-width: $bp-lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // ── Left column ──────────────────────────────────────────────────────────
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    opacity: 0;
+    transform: translateX(-24px);
+
+    &--visible {
+      animation: fadeSlideRight 0.65s ease 0.1s both;
+
+      .contact__info-card    { animation: fadeSlideUp 0.5s ease both; }
+      .contact__info-card:nth-child(1) { animation-delay: 0.18s; }
+      .contact__info-card:nth-child(2) { animation-delay: 0.26s; }
+      .contact__info-card:nth-child(3) { animation-delay: 0.34s; }
+      .contact__social-row   { animation: fadeSlideUp 0.5s ease 0.44s both; }
+      .contact__status-card  { animation: fadeSlideUp 0.5s ease 0.54s both; }
+    }
+  }
+
+  // ── Info list ────────────────────────────────────────────────────────────
+  &__info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__info-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: $bg-surface;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 16px 18px;
+    opacity: 0;
+    transition: border-color 0.2s, transform 0.2s;
+
+    &:hover {
+      border-color: $accent-border;
+      transform: translateX(3px);
+    }
+  }
+
+  &__info-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: $accent-dim;
+    border: 1px solid $accent-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__info-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $text-dim;
+  }
+
+  &__info-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: $text-secondary;
+    letter-spacing: 0.01em;
+  }
+
+  // ── Social row ───────────────────────────────────────────────────────────
+  &__social-row {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+  }
+
+  &__social-row li { flex: 1; }
+
+  &__social-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    background: $bg-surface;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 14px 8px;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+
+    &:hover {
+      border-color: $accent-border;
+      transform: translateY(-2px);
+    }
+  }
+
+  &__social-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $text-muted;
+    text-transform: uppercase;
+  }
+
+  // ── Status card ──────────────────────────────────────────────────────────
+  &__status-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: $green-dim;
+    border: 1px solid $green-border;
+    border-radius: 12px;
+    padding: 16px 18px;
+    opacity: 0;
+  }
+
+  &__status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $green;
+    flex-shrink: 0;
+    animation: pulseGreen 2.4s ease-in-out infinite;
+  }
+
+  &__status-text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(138, 212, 168, 0.85);
+
+    strong { color: $green; font-weight: 600; }
+  }
+
+  // ── Form card ────────────────────────────────────────────────────────────
+  &__form-card {
+    background: $bg-surface;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 28px;
+    opacity: 0;
+    transform: translateX(24px);
+
+    &--visible {
+      animation: fadeSlideLeft 0.65s ease 0.15s both;
+    }
+  }
+
+  // ── Form layout ──────────────────────────────────────────────────────────
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__form-row {
+    margin-bottom: 18px;
+
+    &--two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+
+      @media (max-width: $bp-sm) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-muted;
+    margin-bottom: 8px;
+  }
+
+  // ── Input & Textarea ─────────────────────────────────────────────────────
+  &__input,
+  &__textarea {
+    width: 100%;
+    background: $bg-surface-alt;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: $font-body;
+    font-size: 13px;
+    color: $text-primary;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+
+    &::placeholder { color: $text-dim; }
+
+    &:hover { border-color: rgba(255, 255, 255, 0.15); }
+
+    &:focus {
+      border-color: $accent;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    &--error {
+      border-color: $red-error !important;
+      box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.12) !important;
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+
+  // ── Field footer (error + char count) ────────────────────────────────────
+  &__field-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+    min-height: 18px;
+  }
+
+  &__field-error {
+    font-size: 11px;
+    color: $red-error;
+    letter-spacing: 0.02em;
+  }
+
+  &__char-count {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: $text-dim;
+    letter-spacing: 0.05em;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  // ── Submit button ────────────────────────────────────────────────────────
+  &__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: $accent;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+
+    &:hover:not(:disabled) {
+      background: lighten($accent, 6%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba($accent, 0.3);
+    }
+
+    &:active:not(:disabled) { transform: translateY(0); }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+
+  // ── Spinner ──────────────────────────────────────────────────────────────
+  &__spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  // ── Form footnote ────────────────────────────────────────────────────────
+  &__form-footnote {
+    font-size: 11px;
+    color: $text-dim;
+    text-align: center;
+    margin-top: 14px;
+    letter-spacing: 0.02em;
+  }
+
+  // ── Success state ────────────────────────────────────────────────────────
+  &__success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 24px;
+    gap: 16px;
+    animation: successPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  &__success-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__success-title {
+    font-family: $font-display;
+    font-size: 22px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.5px;
+  }
+
+  &__success-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: $text-muted;
+    max-width: 300px;
+  }
+}
+
+// ─── Reduced Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .contact {
+    &__header,
+    &__left,
+    &__form-card,
+    &__info-card,
+    &__social-row,
+    &__status-card,
+    &__success {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    &__status-dot { animation: none !important; }
+    &__spinner    { animation: spin 1.5s linear infinite; }
+  }
+}

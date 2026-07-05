@@ -1,0 +1,162 @@
+<section class="skills" id="skills" aria-labelledby="skills-heading">
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <div
+    class="skills__header"
+    appObserveVisibility
+    visibleClass="skills__header--visible"
+    [threshold]="0.1"
+    (visible)="headerVisible.set(true)"
+  >
+    <div class="skills__header-left">
+      <div class="skills__eyebrow" aria-hidden="true">Skills &amp; expertise</div>
+      <h2 class="skills__heading" id="skills-heading">
+        What I<br />
+        <span class="skills__heading-accent">build</span> with.
+      </h2>
+    </div>
+    <div class="skills__header-right">
+      <p class="skills__description">
+        A curated stack across <strong>backend, frontend, AI systems</strong>,
+        and <strong>DevOps</strong> — each tool chosen because it solves a real
+        problem at enterprise scale.
+      </p>
+      <div class="skills__stat" aria-live="polite" aria-atomic="true">
+        <span class="skills__stat-num">{{ totalSkillCount() }}</span>
+        <span class="skills__stat-label">
+          {{ activeFilter() === 'all' ? 'core skills across all categories' : 'skills in this category' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Filter bar ──────────────────────────────────────────────── -->
+  <div
+    class="skills__filters"
+    role="group"
+    aria-label="Filter skills by category"
+    appObserveVisibility
+    visibleClass="skills__filters--visible"
+    [threshold]="0.1"
+  >
+    @for (filter of filters; track filter.id) {
+      <button
+        class="skills__filter-btn"
+        [class.skills__filter-btn--active]="activeFilter() === filter.id"
+        (click)="setFilter(filter.id)"
+        [attr.aria-pressed]="activeFilter() === filter.id"
+        type="button"
+      >{{ filter.label }}</button>
+    }
+  </div>
+
+  <!-- ── Loading skeletons ─────────────────────────────────────────── -->
+  @if (loadState() === 'loading') {
+    <div class="skills__grid" aria-busy="true" aria-label="Loading skills">
+      @for (s of skeletonCards; track $index) {
+        <div class="skills__card">
+          <div class="skills__card-header">
+            <app-skeleton width="38px" height="38px" radius="9px"></app-skeleton>
+            <div style="flex:1;display:flex;flex-direction:column;gap:5px;">
+              <app-skeleton height="13px" width="60%"></app-skeleton>
+              <app-skeleton height="10px" width="40%"></app-skeleton>
+            </div>
+          </div>
+          <div class="skills__bar-list" style="display:flex;flex-direction:column;gap:12px;">
+            @for (b of [1,2,3,4]; track b) {
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;justify-content:space-between;">
+                  <app-skeleton height="11px" width="55%"></app-skeleton>
+                  <app-skeleton height="11px" width="28px"></app-skeleton>
+                </div>
+                <app-skeleton height="3px" radius="2px"></app-skeleton>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Error ────────────────────────────────────────────────────── -->
+  @if (loadState() === 'error') {
+    <div class="skills__error" role="alert">
+      <p>Could not load skills. Please refresh the page.</p>
+    </div>
+  }
+
+  <!-- ── Loaded grid ───────────────────────────────────────────────── -->
+  @if (loadState() === 'loaded') {
+    <div
+      class="skills__grid"
+      appObserveVisibility
+      visibleClass="skills__grid--visible"
+      [threshold]="0.05"
+      (visible)="gridVisible.set(true)"
+      role="list"
+      aria-label="Skill categories"
+    >
+      @for (group of filteredGroups(); track trackGroup($index, group); let i = $index) {
+        <article
+          class="skills__card"
+          role="listitem"
+          [class.skills__card--ai]="group.category === 'ai'"
+          [style.--card-delay]="(i * 80) + 'ms'"
+          [attr.aria-label]="group.title + ' skills'"
+        >
+          <div class="skills__card-header">
+            <div
+              class="skills__card-icon"
+              [style.background]="group.accentBg"
+              [style.border-color]="group.accentColor + '44'"
+              aria-hidden="true"
+            >
+              <svg width="17" height="17" viewBox="0 0 16 16" fill="none"
+                   [innerHTML]="group.iconPath"></svg>
+            </div>
+            <div class="skills__card-meta">
+              <h3 class="skills__card-title">{{ group.title }}</h3>
+              <span class="skills__card-count">{{ group.skills.length }} technologies</span>
+            </div>
+          </div>
+
+          <ul class="skills__bar-list" [attr.aria-label]="group.title + ' skill levels'">
+            @for (skill of group.skills; track trackSkill($index, skill)) {
+              <li class="skills__bar-item">
+                <div class="skills__bar-meta">
+                  <span class="skills__bar-name">{{ skill.name }}</span>
+                  <span class="skills__bar-pct" [attr.aria-label]="skill.level + ' percent'">
+                    {{ skill.level }}%
+                  </span>
+                </div>
+                <div class="skills__bar-track"
+                     role="progressbar"
+                     [attr.aria-valuenow]="skill.level"
+                     aria-valuemin="0" aria-valuemax="100"
+                     [attr.aria-label]="skill.name">
+                  <div
+                    class="skills__bar-fill"
+                    [style.width]="gridVisible() ? skill.level + '%' : '0%'"
+                    [style.background]="group.accentColor"
+                  ></div>
+                </div>
+              </li>
+            }
+          </ul>
+
+          @if (group.tools && group.tools.length) {
+            <div class="skills__tools">
+              <span class="skills__tools-label">Also used</span>
+              <ul class="skills__tools-list" role="list">
+                @for (tool of group.tools; track tool) {
+                  <li class="skills__tool-chip" role="listitem">{{ tool }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+
+</section>

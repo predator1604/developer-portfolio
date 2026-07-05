@@ -1,0 +1,581 @@
+// ─── Design Tokens ─────────────────────────────────────────────────────────
+$bg-deep:        #0a0a0f;
+$bg-surface:     #10101a;
+$bg-surface-alt: #0d0d18;
+$accent:         #6366f1;
+$accent-dim:     rgba(99, 102, 241, 0.12);
+$accent-border:  rgba(99, 102, 241, 0.25);
+$accent-glow:    rgba(99, 102, 241, 0.18);
+$text-primary:   #f0f0f8;
+$text-secondary: #c0c0d0;
+$text-muted:     #6b6b82;
+$text-dim:       #3a3a52;
+$green-live:     #22c55e;
+$font-display:   'Space Grotesk', 'Inter', system-ui, sans-serif;
+$font-body:      'Inter', system-ui, sans-serif;
+$font-mono:      'JetBrains Mono', 'Fira Code', monospace;
+
+// ─── Breakpoints ───────────────────────────────────────────────────────────
+$bp-lg: 1024px;
+$bp-md: 768px;
+$bp-sm: 480px;
+
+// ─── Animations ────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideRight {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.08); }
+}
+
+// ─── Component ──────────────────────────────────────────────────────────────
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 120px 56px;
+  background: $bg-deep;
+  position: relative;
+
+  // Subtle top border to separate from hero
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 56px; right: 56px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(99, 102, 241, 0.3) 30%,
+      rgba(99, 102, 241, 0.3) 70%,
+      transparent 100%
+    );
+  }
+
+  @media (max-width: $bp-lg) {
+    grid-template-columns: 1fr;
+    gap: 64px;
+    padding: 80px 32px;
+
+    &::before { left: 32px; right: 32px; }
+  }
+
+  @media (max-width: $bp-sm) {
+    padding: 64px 20px;
+    &::before { left: 20px; right: 20px; }
+  }
+
+  // ── Left Column ───────────────────────────────────────────────────────
+  &__left {
+    opacity: 0;
+    transform: translateX(-24px);
+    transition: none;
+
+    // Stagger children when visible class is added by IntersectionObserver
+    &--visible {
+      .about__eyebrow     { animation: fadeSlideUp 0.55s ease 0.0s both; }
+      .about__heading     { animation: fadeSlideUp 0.65s ease 0.1s both; }
+      .about__subheading  { animation: fadeSlideUp 0.55s ease 0.25s both; }
+      .about__bio         { animation: fadeSlideUp 0.55s ease 0.35s both; }
+      .about__divider     { animation: fadeSlideUp 0.4s  ease 0.45s both; }
+      .about__info-grid   { animation: fadeSlideUp 0.55s ease 0.5s  both; }
+      .about__cta         { animation: fadeSlideUp 0.5s  ease 0.65s both; }
+
+      // Animate the column itself in
+      animation: fadeSlideRight 0.7s ease 0s both;
+    }
+  }
+
+  // ── Eyebrow ───────────────────────────────────────────────────────────
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: $font-body;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $accent;
+    margin-bottom: 20px;
+    opacity: 0; // overridden by animation
+
+    &::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: $accent;
+      flex-shrink: 0;
+    }
+  }
+
+  // ── Heading ───────────────────────────────────────────────────────────
+  &__heading {
+    font-family: $font-display;
+    font-size: clamp(42px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -2px;
+    color: $text-primary;
+    margin-bottom: 10px;
+    opacity: 0; // overridden by animation
+  }
+
+  &__heading-accent {
+    color: $accent;
+    font-style: italic;
+  }
+
+  &__subheading {
+    font-family: $font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $text-dim;
+    margin-bottom: 36px;
+    opacity: 0; // overridden by animation
+  }
+
+  // ── Bio ───────────────────────────────────────────────────────────────
+  &__bio {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 0;
+    opacity: 0; // overridden by animation
+  }
+
+  &__bio-para {
+    font-family: $font-body;
+    font-size: 15px;
+    line-height: 1.85;
+    color: $text-muted;
+
+    // Inline <strong> tags
+    :deep(strong) {
+      color: $text-secondary;
+      font-weight: 500;
+    }
+  }
+
+  // ── Divider ───────────────────────────────────────────────────────────
+  &__divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 32px 0;
+    opacity: 0; // overridden by animation
+  }
+
+  // ── Info Grid ─────────────────────────────────────────────────────────
+  &__info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 28px;
+    margin-bottom: 0;
+    opacity: 0; // overridden by animation
+
+    @media (max-width: $bp-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__info-label {
+    font-family: $font-body;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $text-dim;
+  }
+
+  &__info-value {
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 500;
+    color: $text-muted;
+    line-height: 1.4;
+
+    &--green { color: $green-live; }
+    &--accent { color: $accent; }
+  }
+
+  &__info-link {
+    color: $accent;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+
+    &:hover { border-color: $accent; }
+  }
+
+  // ── CTA ───────────────────────────────────────────────────────────────
+  &__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 32px;
+    opacity: 0; // overridden by animation
+  }
+
+  &__cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: $accent;
+    border: 1px solid $accent;
+    padding: 11px 24px;
+    border-radius: 7px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+
+    &:hover {
+      background: lighten($accent, 6%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba($accent, 0.3);
+    }
+    &:active { transform: translateY(0); }
+  }
+
+  &__cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 500;
+    color: $text-muted;
+    text-decoration: none;
+    border-bottom: 1px solid $text-dim;
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: $text-primary;
+      border-color: $text-muted;
+    }
+  }
+
+  // ── Right Column ──────────────────────────────────────────────────────
+  &__right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    transform: translateX(24px);
+    transition: none;
+
+    &--visible {
+      animation: fadeSlideLeft 0.7s ease 0.15s both;
+
+      .about__avatar-wrap  { animation: fadeSlideUp 0.6s ease 0.2s both; }
+      .about__stats        { animation: fadeSlideUp 0.6s ease 0.35s both; }
+      .about__code-card    { animation: fadeSlideUp 0.6s ease 0.5s both; }
+    }
+  }
+
+  // ── Avatar ────────────────────────────────────────────────────────────
+  &__avatar-wrap {
+    position: relative;
+    opacity: 0; // overridden by animation
+  }
+
+  &__avatar-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, $accent-glow 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  &__avatar-frame {
+    position: relative;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: $bg-surface;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 1;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  &__avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  // Spinning rings
+  &__avatar-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+
+    &--1 {
+      width: 180px; height: 180px;
+      animation: spinSlow 12s linear infinite;
+    }
+    &--2 {
+      width: 130px; height: 130px;
+      border-color: rgba(99, 102, 241, 0.25);
+      animation: spinReverse 8s linear infinite;
+    }
+    &--3 {
+      width: 80px; height: 80px;
+      border-color: rgba(99, 102, 241, 0.4);
+      animation: spinSlow 5s linear infinite;
+    }
+  }
+
+  &__avatar-initials-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  &__avatar-initials {
+    font-family: $font-display;
+    font-size: 22px;
+    font-weight: 700;
+    color: $accent;
+    letter-spacing: 1px;
+  }
+
+  // Corner accents on avatar frame
+  &__avatar-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: $accent;
+    border-style: solid;
+    opacity: 0.6;
+    z-index: 3;
+
+    &--tl { top: -1px;  left: -1px;  border-width: 2px 0 0 2px; border-radius: 2px 0 0 0; }
+    &--br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-radius: 0 0 2px 0; }
+  }
+
+  // ── Stats ─────────────────────────────────────────────────────────────
+  &__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    opacity: 0; // overridden by animation
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: $bg-surface;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 18px 16px;
+    transition: border-color 0.2s, transform 0.2s;
+
+    &:hover {
+      border-color: $accent-border;
+      transform: translateY(-2px);
+    }
+  }
+
+  &__stat-num {
+    font-family: $font-display;
+    font-size: 30px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  &__stat-suffix {
+    font-size: 20px;
+    color: $accent;
+    font-weight: 700;
+  }
+
+  &__stat-desc {
+    font-family: $font-body;
+    font-size: 11px;
+    color: $text-dim;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+
+  // ── Code Card ─────────────────────────────────────────────────────────
+  &__code-card {
+    background: $bg-surface-alt;
+    border: 1px solid $accent-border;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0;
+    opacity: 0; // overridden by animation
+  }
+
+  &__code-chrome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  &__code-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--red   { background: #ff5f57; }
+    &--amber { background: #ffbd2e; }
+    &--green { background: #28c840; }
+  }
+
+  &__code-filename {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: $text-dim;
+    margin-left: 8px;
+    flex: 1;
+    letter-spacing: 0.04em;
+  }
+
+  &__code-lang {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: $accent;
+    letter-spacing: 0.06em;
+    background: $accent-dim;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid $accent-border;
+  }
+
+  &__code-body {
+    padding: 16px 18px 18px;
+    margin: 0;
+    overflow-x: auto;
+    white-space: pre;
+
+    code {
+      display: block;
+      font-family: $font-mono;
+      font-size: 12px;
+      line-height: 1.9;
+    }
+  }
+
+  &__code-line {
+    white-space: pre;
+
+    &--blank { user-select: none; }
+
+    // Token colours
+    :deep(.c-purple) { color: #a78bfa; }
+    :deep(.c-blue)   { color: #60a5fa; }
+    :deep(.c-green)  { color: #34d399; }
+    :deep(.c-amber)  { color: #fbbf24; }
+    :deep(.c-white)  { color: #c0c0d0; }
+    :deep(.c-muted)  { color: #3a3a52; font-style: italic; }
+  }
+}
+
+// ─── Reduced Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .about {
+    &__left,
+    &__right {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    &__left--visible,
+    &__right--visible {
+      animation: none !important;
+
+      .about__eyebrow,
+      .about__heading,
+      .about__subheading,
+      .about__bio,
+      .about__divider,
+      .about__info-grid,
+      .about__cta,
+      .about__avatar-wrap,
+      .about__stats,
+      .about__code-card {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    &__avatar-ring { animation: none !important; }
+    &__avatar-glow { animation: none !important; }
+  }
+}

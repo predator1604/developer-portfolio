@@ -1,0 +1,132 @@
+<footer class="footer" role="contentinfo">
+
+  <!-- ── Top: four-column grid ──────────────────────────────────── -->
+  <div class="footer__top">
+
+    <!-- Brand column -->
+    <div class="footer__brand">
+
+      <!-- Monogram logo -->
+      <a class="footer__logo" [routerLink]="['/']" aria-label="Back to top of page">
+        <span class="footer__logo-bracket">&lt;</span>Prashant Kumar Singh<span class="footer__logo-bracket">/&gt;</span>
+      </a>
+
+      <!-- Tagline -->
+      <p class="footer__tagline">
+        Full-Stack AI Engineer building enterprise .NET and Angular systems
+        supercharged by Agentic AI, RAG, and DevOps automation.
+      </p>
+
+      <!-- Social icons -->
+      <nav class="footer__socials" aria-label="Social media links">
+        @for (link of socialLinks; track trackSocial($index, link)) {
+          <a
+            class="footer__social-btn"
+            [href]="link.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="link.label"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              [innerHTML]="link.iconPath"
+              aria-hidden="true"
+            ></svg>
+          </a>
+        }
+      </nav>
+
+    </div>
+
+    <!-- Nav columns -->
+    @for (col of navColumns; track trackColumn($index, col)) {
+      <nav
+        class="footer__nav-col"
+        [attr.aria-label]="col.title + ' links'"
+      >
+        <h3 class="footer__col-title">{{ col.title }}</h3>
+        <ul class="footer__nav-list" role="list">
+          @for (link of col.links; track trackLink($index, link)) {
+            <li>
+              @if (link.fragment) {
+                <!-- Internal anchor scroll -->
+                <a
+                  class="footer__nav-link"
+                  [class.footer__nav-link--muted]="link.muted"
+                  [routerLink]="['/']"
+                  [fragment]="link.fragment"
+                >{{ link.label }}</a>
+              } @else if (link.href) {
+                <!-- External link -->
+                <a
+                  class="footer__nav-link"
+                  [class.footer__nav-link--muted]="link.muted"
+                  [href]="link.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{{ link.label }}</a>
+              }
+            </li>
+          }
+        </ul>
+      </nav>
+    }
+
+    <!-- Tech stack column -->
+    <div class="footer__stack-col">
+      <h3 class="footer__col-title">Core stack</h3>
+      <ul class="footer__chips" role="list" aria-label="Core technologies">
+        @for (chip of techChips; track trackChip($index, chip)) {
+          <li class="footer__chip" role="listitem">{{ chip.label }}</li>
+        }
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ── Divider ─────────────────────────────────────────────────── -->
+  <div class="footer__divider" role="separator" aria-hidden="true"></div>
+
+  <!-- ── Bottom bar ─────────────────────────────────────────────── -->
+  <div class="footer__bottom">
+
+    <!-- Copyright -->
+    <p class="footer__copyright">
+      &copy; {{ currentYear() }}
+      <span class="footer__copyright-name">Prashant Kumar Singh</span>.
+      All rights reserved.
+    </p>
+
+    <!-- Built with badge -->
+    <div class="footer__built" aria-label="Built with Angular 19 and .NET">
+      <span class="footer__built-dot" aria-hidden="true"></span>
+      <span class="footer__built-text">Built with Angular&nbsp;19 &amp; .NET</span>
+    </div>
+
+    <!-- Scroll to top -->
+    <button
+      class="footer__scroll-top"
+      type="button"
+      (click)="scrollToTop()"
+      aria-label="Scroll back to top of page"
+    >
+      Back to top
+      <span class="footer__scroll-arrow" aria-hidden="true">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path
+            d="M5 8V2M2 5l3-3 3 3"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </button>
+
+  </div>
+
+</footer>

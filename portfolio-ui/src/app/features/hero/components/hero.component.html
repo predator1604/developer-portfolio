@@ -1,0 +1,164 @@
+<section class="hero" aria-label="Hero introduction">
+
+  <!-- Particle canvas -->
+  <canvas #particleCanvas class="hero__canvas" aria-hidden="true"></canvas>
+
+  <!-- Noise overlay for depth -->
+  <div class="hero__noise" aria-hidden="true"></div>
+
+  <!-- ── Navigation ── -->
+  <nav class="hero__nav" role="navigation" aria-label="Main navigation">
+    <a class="hero__nav-logo" [routerLink]="['/']" aria-label="Home">
+      <span class="hero__nav-logo-bracket">&lt;</span>Prashant Kumar Singh
+      <span class="hero__nav-logo-bracket">/&gt;</span>
+    </a>
+
+    <ul class="hero__nav-links" role="list">
+      @for (link of navLinks; track link.fragment) {
+        <li>
+          <a
+            class="hero__nav-link"
+            [class.hero__nav-link--active]="activeSection() === link.fragment"
+            [attr.aria-current]="activeSection() === link.fragment ? 'page' : null"
+            [routerLink]="['/']"
+            [fragment]="link.fragment"
+          >{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+
+    <a class="hero__nav-cta" href="/assets/resume.pdf" target="_blank" rel="noopener" aria-label="Download Resume PDF">
+      Resume ↗
+    </a>
+
+    <button
+      class="hero__nav-burger"
+      [class.hero__nav-burger--open]="navOpen()"
+      (click)="toggleNav()"
+      [attr.aria-expanded]="navOpen()"
+      aria-controls="mobile-menu"
+      aria-label="Toggle navigation"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  @if (navOpen()) {
+    <div class="hero__mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu">
+      <ul role="list">
+        @for (link of navLinks; track link.fragment) {
+          <li>
+            <a
+              class="hero__mobile-link"
+              [routerLink]="['/']"
+              [fragment]="link.fragment"
+              (click)="toggleNav()"
+            >{{ link.label }}</a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+
+  <!-- ── Hero Content ── -->
+  <div class="hero__content" [class.hero__content--visible]="contentVisible()">
+
+    <!-- Eyebrow -->
+    <div class="hero__eyebrow" aria-label="Current status">
+      <span class="hero__eyebrow-dot" aria-hidden="true"></span>
+      Available for opportunities
+    </div>
+
+    <!-- Name -->
+    <h1 class="hero__name">
+      Prashant<br />
+      <span class="hero__name-accent">Kumar Singh.</span>
+    </h1>
+
+    <!-- Typed role -->
+    <div class="hero__role" aria-live="polite" aria-label="Current role">
+      <span class="hero__role-text">{{ typedText() }}</span>
+      <span
+        class="hero__cursor"
+        [class.hero__cursor--hidden]="!showCursor()"
+        aria-hidden="true"
+      >|</span>
+    </div>
+
+    <!-- Description -->
+    <p class="hero__description">
+      Building enterprise&nbsp;<strong>.NET&nbsp;&amp;&nbsp;Angular</strong>&nbsp;applications
+      supercharged by&nbsp;<strong>Agentic&nbsp;AI</strong>,&nbsp;<strong>RAG&nbsp;pipelines</strong>,
+      and automated&nbsp;<strong>DevOps</strong>&mdash;where clean architecture meets
+      intelligent systems.
+    </p>
+
+    <!-- Tech chips -->
+    <ul class="hero__chips" role="list" aria-label="Core technologies">
+      @for (chip of techChips; track chip) {
+        <li class="hero__chip" role="listitem">{{ chip }}</li>
+      }
+    </ul>
+
+    <!-- CTA buttons -->
+    <div class="hero__cta" role="group" aria-label="Call to action">
+      <a
+        class="hero__cta-primary"
+        [routerLink]="['/']"
+        fragment="projects"
+        aria-label="View my projects"
+      >
+        View Projects
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a
+        class="hero__cta-secondary"
+        href="/assets/resume.pdf"
+        target="_blank"
+        rel="noopener"
+        aria-label="Download resume (opens PDF)"
+      >
+        Download Resume
+      </a>
+      <a
+        class="hero__cta-ghost"
+        [routerLink]="['/']"
+        fragment="contact"
+        aria-label="Go to contact section"
+      >
+        Get in touch →
+      </a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="hero__stats" role="list" aria-label="Quick stats">
+      <div class="hero__stat" role="listitem">
+        <span class="hero__stat-num">3</span>
+        <span class="hero__stat-label">AI Projects</span>
+      </div>
+      <div class="hero__stat-divider" aria-hidden="true"></div>
+      <div class="hero__stat" role="listitem">
+        <span class="hero__stat-num">10+</span>
+        <span class="hero__stat-label">Technologies</span>
+      </div>
+      <div class="hero__stat-divider" aria-hidden="true"></div>
+      <div class="hero__stat" role="listitem">
+        <span class="hero__stat-num">∞</span>
+        <span class="hero__stat-label">Coffee Consumed</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero__scroll" aria-hidden="true">
+    <span class="hero__scroll-label">Scroll</span>
+    <div class="hero__scroll-track">
+      <div class="hero__scroll-thumb"></div>
+    </div>
+  </div>
+
+</section>

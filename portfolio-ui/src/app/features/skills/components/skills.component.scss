@@ -1,0 +1,443 @@
+// ─── Design Tokens ──────────────────────────────────────────────────────────
+$bg-deep:        #0a0a0f;
+$bg-surface:     #10101a;
+$bg-surface-alt: #0d0d18;
+$accent:         #6366f1;
+$accent-dim:     rgba(99, 102, 241, 0.12);
+$accent-border:  rgba(99, 102, 241, 0.25);
+$text-primary:   #f0f0f8;
+$text-secondary: #c0c0d0;
+$text-muted:     #6b6b82;
+$text-dim:       #3a3a52;
+$font-display:   'Space Grotesk', 'Inter', system-ui, sans-serif;
+$font-body:      'Inter', system-ui, sans-serif;
+$font-mono:      'JetBrains Mono', 'Fira Code', monospace;
+
+// ─── Breakpoints ────────────────────────────────────────────────────────────
+$bp-lg: 1024px;
+$bp-md: 768px;
+$bp-sm: 480px;
+
+// ─── Animations ─────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+@keyframes barGrow {
+  from { width: 0% !important; }
+}
+
+// ─── Component ──────────────────────────────────────────────────────────────
+.skills {
+  position: relative;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 120px 56px;
+  background: $bg-deep;
+
+  // Top separator — mirrors About section
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 56px;
+    right: 56px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(99, 102, 241, 0.3) 30%,
+      rgba(99, 102, 241, 0.3) 70%,
+      transparent 100%
+    );
+  }
+
+  @media (max-width: $bp-md) {
+    padding: 80px 32px;
+    &::before { left: 32px; right: 32px; }
+  }
+
+  @media (max-width: $bp-sm) {
+    padding: 64px 20px;
+    &::before { left: 20px; right: 20px; }
+  }
+
+  // ── Section Header ──────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 48px;
+    margin-bottom: 52px;
+    opacity: 0;
+    transform: translateY(24px);
+
+    @media (max-width: $bp-md) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+    }
+
+    &--visible {
+      .skills__eyebrow     { animation: fadeSlideUp 0.5s ease 0.0s both; }
+      .skills__heading     { animation: fadeSlideUp 0.6s ease 0.1s both; }
+      .skills__description { animation: fadeSlideUp 0.5s ease 0.25s both; }
+      .skills__stat        { animation: fadeSlideUp 0.5s ease 0.35s both; }
+      animation: fadeSlideUp 0.6s ease 0s both;
+    }
+  }
+
+  &__header-left {
+    flex-shrink: 0;
+  }
+
+  &__header-right {
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @media (max-width: $bp-md) { max-width: 100%; }
+  }
+
+  // ── Eyebrow ─────────────────────────────────────────────────────────
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: $font-body;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $accent;
+    margin-bottom: 18px;
+    opacity: 0;
+
+    &::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: $accent;
+      flex-shrink: 0;
+    }
+  }
+
+  // ── Heading ─────────────────────────────────────────────────────────
+  &__heading {
+    font-family: $font-display;
+    font-size: clamp(40px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -2px;
+    color: $text-primary;
+    opacity: 0;
+  }
+
+  &__heading-accent {
+    color: $accent;
+    font-style: italic;
+  }
+
+  // ── Description ─────────────────────────────────────────────────────
+  &__description {
+    font-family: $font-body;
+    font-size: 14px;
+    line-height: 1.8;
+    color: $text-muted;
+    opacity: 0;
+
+    strong {
+      color: $text-secondary;
+      font-weight: 500;
+    }
+  }
+
+  // ── Live stat ───────────────────────────────────────────────────────
+  &__stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+  }
+
+  &__stat-num {
+    font-family: $font-display;
+    font-size: 28px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -1px;
+    line-height: 1;
+    transition: all 0.3s ease;
+  }
+
+  &__stat-label {
+    font-size: 12px;
+    color: $text-dim;
+    line-height: 1.4;
+    max-width: 140px;
+  }
+
+  // ── Filter Bar ──────────────────────────────────────────────────────
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(-16px);
+
+    &--visible {
+      animation: fadeSlideDown 0.5s ease 0.2s both;
+    }
+  }
+
+  &__filter-btn {
+    font-family: $font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: $text-muted;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      color: $text-secondary;
+    }
+
+    &:active { transform: scale(0.96); }
+
+    &--active {
+      background: $accent-dim;
+      border-color: $accent-border;
+      color: $accent;
+
+      &:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: rgba(99, 102, 241, 0.5);
+      }
+    }
+  }
+
+  // ── Grid ────────────────────────────────────────────────────────────
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    @media (max-width: $bp-lg) {
+      grid-template-columns: 1fr;
+    }
+
+    &--visible {
+      .skills__card {
+        animation: cardReveal 0.55s ease both;
+        animation-delay: var(--card-delay, 0ms);
+      }
+    }
+  }
+
+  // ── Card ────────────────────────────────────────────────────────────
+  &__card {
+    background: $bg-surface;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 24px;
+    opacity: 0;
+    transition: border-color 0.25s, transform 0.25s;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    // AI card gets accent border — the differentiator
+    &--ai {
+      border-color: rgba(139, 92, 246, 0.2);
+
+      &:hover {
+        border-color: rgba(139, 92, 246, 0.4);
+      }
+    }
+  }
+
+  // ── Card Header ─────────────────────────────────────────────────────
+  &__card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  &__card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__card-title {
+    font-family: $font-body;
+    font-size: 14px;
+    font-weight: 600;
+    color: $text-primary;
+    letter-spacing: 0.01em;
+  }
+
+  &__card-count {
+    font-size: 11px;
+    color: $text-dim;
+    letter-spacing: 0.04em;
+  }
+
+  // ── Skill Bars ──────────────────────────────────────────────────────
+  &__bar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__bar-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__bar-name {
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-muted;
+    letter-spacing: 0.01em;
+  }
+
+  &__bar-pct {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: $text-dim;
+    letter-spacing: 0.06em;
+  }
+
+  &__bar-track {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // ── Tools Chips ─────────────────────────────────────────────────────
+  &__tools {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  &__tools-label {
+    display: block;
+    font-family: $font-body;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $text-dim;
+    margin-bottom: 10px;
+  }
+
+  &__tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__tool-chip {
+    font-family: $font-body;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 4px 11px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    color: $text-muted;
+    background: $bg-surface-alt;
+    transition: border-color 0.2s, color 0.2s;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+      color: $text-secondary;
+    }
+  }
+}
+
+// ─── Reduced Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .skills {
+    &__header,
+    &__filters,
+    &__card {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    &__header--visible {
+      .skills__eyebrow,
+      .skills__heading,
+      .skills__description,
+      .skills__stat {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    &__bar-fill {
+      transition: none !important;
+    }
+  }
+}

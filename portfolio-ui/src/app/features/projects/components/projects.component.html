@@ -1,0 +1,190 @@
+<section class="projects" id="projects" aria-labelledby="projects-heading">
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <div
+    class="projects__header"
+    appObserveVisibility
+    visibleClass="projects__header--visible"
+    [threshold]="0.1"
+    (visible)="headerVisible.set(true)"
+  >
+    <div class="projects__header-left">
+      <div class="projects__eyebrow" aria-hidden="true">Featured projects</div>
+      <h2 class="projects__heading" id="projects-heading">
+        Things I've<br />
+        <span class="projects__heading-accent">shipped.</span>
+      </h2>
+    </div>
+    <div class="projects__header-right">
+      <p class="projects__description">
+        Three AI-native platforms built with
+        <strong>.NET, Angular&nbsp;19</strong>, and intelligent
+        systems — each solving a real enterprise problem.
+      </p>
+      <a class="projects__github-link" href="https://github.com/predator1604"
+         target="_blank" rel="noopener noreferrer" aria-label="View all on GitHub">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1C4.13 1 1 4.13 1 8c0 3.09 2.01 5.71 4.79 6.64.35.06.48-.15.48-.34v-1.19c-1.95.42-2.36-.94-2.36-.94-.32-.81-.78-1.03-.78-1.03-.64-.43.05-.42.05-.42.7.05 1.07.72 1.07.72.62 1.07 1.63.76 2.03.58.06-.45.24-.76.44-.94-1.56-.18-3.2-.78-3.2-3.46 0-.76.27-1.39.72-1.88-.07-.18-.31-.89.07-1.85 0 0 .59-.19 1.92.72A6.67 6.67 0 018 4.79c.59 0 1.19.08 1.75.23 1.33-.9 1.92-.72 1.92-.72.38.96.14 1.67.07 1.85.45.49.72 1.12.72 1.88 0 2.69-1.64 3.28-3.2 3.46.25.22.48.65.48 1.31v1.94c0 .19.13.4.48.34C12.99 13.71 15 11.09 15 8c0-3.87-3.13-7-7-7z" fill="currentColor"/>
+        </svg>
+        View all on GitHub
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Loading skeletons ───────────────────────────────────────── -->
+  @if (loadState() === 'loading') {
+    <div class="projects__featured" aria-label="Loading projects" aria-busy="true">
+      @for (s of skeletonCards; track $index) {
+        <div class="projects__card projects__card--featured projects__card--skeleton">
+          <div class="projects__card-stripe" style="background: rgba(255,255,255,0.05);"></div>
+          <div class="projects__card-body" style="display:flex;flex-direction:column;gap:14px;">
+            <app-skeleton height="10px" width="40%"></app-skeleton>
+            <app-skeleton height="22px" width="55%"></app-skeleton>
+            <app-skeleton height="14px" width="100%"></app-skeleton>
+            <app-skeleton height="14px" width="85%"></app-skeleton>
+            <app-skeleton height="60px" radius="8px"></app-skeleton>
+            <div style="display:flex;gap:6px;">
+              @for (c of [1,2,3,4]; track c) {
+                <app-skeleton height="24px" width="70px" radius="4px"></app-skeleton>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Error state ─────────────────────────────────────────────── -->
+  @if (loadState() === 'error') {
+    <div class="projects__error" role="alert">
+      <p>Could not load projects. Please refresh the page.</p>
+    </div>
+  }
+
+  <!-- ── Loaded: featured row ────────────────────────────────────── -->
+  @if (loadState() === 'loaded') {
+    <div
+      class="projects__featured"
+      appObserveVisibility
+      visibleClass="projects__featured--visible"
+      [threshold]="0.05"
+      (visible)="featuredVisible.set(true)"
+      role="list"
+      aria-label="Featured projects"
+    >
+      @for (project of featuredProjects(); track trackProject($index, project); let i = $index) {
+        <article
+          class="projects__card projects__card--featured"
+          role="listitem"
+          [style.--card-accent]="project.accentColor"
+          [style.--card-accent-bg]="project.accentBg"
+          [style.--card-delay]="(i * 120) + 'ms'"
+          [attr.aria-label]="project.title + ' project'"
+        >
+          <div class="projects__card-stripe" [style.background]="project.accentColor" aria-hidden="true"></div>
+          <div class="projects__card-body">
+            <div class="projects__card-top">
+              <span class="projects__card-num">{{ (i + 1).toString().padStart(2,'0') }} / {{ project.title }}</span>
+              <div class="projects__card-actions" role="group" [attr.aria-label]="project.title + ' links'">
+                @if (project.liveUrl) {
+                  <a class="projects__action-btn" [href]="project.liveUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'Open ' + project.title">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V9M10 2h4m0 0v4m0-4L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </a>
+                }
+                @if (project.gitHubUrl) {
+                  <a class="projects__action-btn" [href]="project.gitHubUrl" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'GitHub: ' + project.title">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1C4.13 1 1 4.13 1 8c0 3.09 2.01 5.71 4.79 6.64.35.06.48-.15.48-.34v-1.19c-1.95.42-2.36-.94-2.36-.94-.32-.81-.78-1.03-.78-1.03-.64-.43.05-.42.05-.42.7.05 1.07.72 1.07.72.62 1.07 1.63.76 2.03.58.06-.45.24-.76.44-.94-1.56-.18-3.2-.78-3.2-3.46 0-.76.27-1.39.72-1.88-.07-.18-.31-.89.07-1.85 0 0 .59-.19 1.92.72A6.67 6.67 0 018 4.79c.59 0 1.19.08 1.75.23 1.33-.9 1.92-.72 1.92-.72.38.96.14 1.67.07 1.85.45.49.72 1.12.72 1.88 0 2.69-1.64 3.28-3.2 3.46.25.22.48.65.48 1.31v1.94c0 .19.13.4.48.34C12.99 13.71 15 11.09 15 8c0-3.87-3.13-7-7-7z" fill="currentColor"/></svg>
+                  </a>
+                }
+              </div>
+            </div>
+            <p class="projects__card-category" [style.color]="project.accentColor">{{ project.category }}</p>
+            <h3 class="projects__card-title">{{ project.title }}</h3>
+            <p class="projects__card-desc" [innerHTML]="project.description"></p>
+            @if (project.feature) {
+              <div class="projects__card-feature" [style.background]="project.accentBg" [style.border-color]="project.accentColor + '33'" role="note">
+                <span class="projects__feature-dot" [style.background]="project.accentColor" aria-hidden="true"></span>
+                <p class="projects__feature-text" [innerHTML]="project.feature"></p>
+              </div>
+            }
+            <ul class="projects__stack" role="list" [attr.aria-label]="project.title + ' tech stack'">
+              @for (chip of project.stack; track trackChip($index, chip)) {
+                <li class="projects__stack-chip" role="listitem"
+                    [style.border-color]="project.accentColor + '55'"
+                    [style.color]="project.accentColor"
+                    [style.background]="project.accentBg">{{ chip }}</li>
+              }
+            </ul>
+            <div class="projects__card-footer">
+              <div class="projects__status" role="status">
+                <span class="projects__status-dot" [style.background]="statusColors[project.status]" aria-hidden="true"></span>
+                <span class="projects__status-label">{{ project.statusLabel }}</span>
+              </div>
+              @if (project.liveUrl) {
+                <a class="projects__card-cta" [href]="project.liveUrl" target="_blank" rel="noopener noreferrer" [style.color]="project.accentColor">
+                  View case study →
+                </a>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <!-- ── Compact row ─────────────────────────────────────────────── -->
+    <div
+      class="projects__compact-row"
+      appObserveVisibility
+      visibleClass="projects__compact-row--visible"
+      [threshold]="0.05"
+      (visible)="compactVisible.set(true)"
+      role="list"
+      aria-label="More projects"
+    >
+      @for (project of compactProjects(); track trackProject($index, project); let i = $index) {
+        <article
+          class="projects__card projects__card--compact"
+          role="listitem"
+          [style.--card-accent]="project.accentColor"
+          [style.--card-accent-bg]="project.accentBg"
+          [style.--card-delay]="(i * 100) + 'ms'"
+        >
+          <div class="projects__compact-top">
+            <div class="projects__compact-icon" [style.background]="project.accentBg" [style.border-color]="project.accentColor + '44'" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 10l4-4 3 3 5-6" [attr.stroke]="project.accentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="projects__compact-num">{{ (i + 3).toString().padStart(2,'0') }}</span>
+          </div>
+          <h3 class="projects__compact-title">{{ project.title }}</h3>
+          <p class="projects__compact-desc" [innerHTML]="project.description"></p>
+          <ul class="projects__compact-stack" role="list">
+            @for (chip of project.stack; track trackChip($index, chip)) {
+              <li class="projects__compact-chip" role="listitem"
+                  [style.border-color]="project.accentColor + '44'"
+                  [style.color]="project.accentColor"
+                  [style.background]="project.accentBg">{{ chip }}</li>
+            }
+          </ul>
+          <div class="projects__compact-footer">
+            <div class="projects__status" role="status">
+              <span class="projects__status-dot" [style.background]="statusColors[project.status]" aria-hidden="true"></span>
+              <span class="projects__status-label">{{ project.statusLabel }}</span>
+            </div>
+            @if (project.gitHubUrl) {
+              <a class="projects__compact-link" [href]="project.gitHubUrl" target="_blank" rel="noopener noreferrer" [style.color]="project.accentColor">GitHub →</a>
+            }
+          </div>
+        </article>
+      }
+
+      <div class="projects__github-card" role="complementary">
+        <div class="projects__github-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <p class="projects__github-hint">More projects on GitHub</p>
+        <a class="projects__github-btn" href="https://github.com/yourname" target="_blank" rel="noopener noreferrer">Visit GitHub →</a>
+      </div>
+    </div>
+  }
+
+</section>

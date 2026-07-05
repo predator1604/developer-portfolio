@@ -1,0 +1,570 @@
+// ─── Design Tokens ─────────────────────────────────────────────────────────
+$bg-deep:       #0a0a0f;
+$bg-surface:    #10101a;
+$accent:        #6366f1;
+$accent-dim:    rgba(99, 102, 241, 0.15);
+$accent-border: rgba(99, 102, 241, 0.35);
+$text-primary:  #f0f0f8;
+$text-muted:    #6b6b82;
+$text-dim:      #3a3a52;
+$green-live:    #22c55e;
+$font-display:  'Space Grotesk', 'Inter', system-ui, sans-serif;
+$font-body:     'Inter', system-ui, sans-serif;
+$font-mono:     'JetBrains Mono', 'Fira Code', monospace;
+
+// ─── Breakpoints ───────────────────────────────────────────────────────────
+$bp-md: 768px;
+$bp-sm: 480px;
+
+// ─── Animations ────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 rgba($green-live, 0.5); }
+  50%      { opacity: 0.7; box-shadow: 0 0 0 5px rgba($green-live, 0); }
+}
+
+@keyframes scrollBob {
+  0%, 100% { transform: translateY(0);   opacity: 1; }
+  60%      { transform: translateY(10px); opacity: 0.2; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Stagger delays for hero content children
+$stagger-delays: (
+  'eyebrow':     0.2s,
+  'name':        0.4s,
+  'role':        0.6s,
+  'description': 0.75s,
+  'chips':       0.9s,
+  'cta':         1.05s,
+  'stats':       1.2s,
+);
+
+// ─── Component ──────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background: $bg-deep;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  // ── Canvas ──────────────────────────────────────────────────────────
+  &__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  // ── Noise texture overlay ────────────────────────────────────────────
+  &__noise {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 0.4;
+  }
+
+  // ── Navigation ──────────────────────────────────────────────────────
+  &__nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 56px;
+    height: 68px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba($bg-deep, 0.7);
+    backdrop-filter: blur(12px);
+    animation: fadeIn 0.4s ease both;
+  }
+
+  &__nav-logo {
+    font-family: $font-mono;
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+
+    &:hover { color: $accent; }
+  }
+
+  &__nav-logo-bracket {
+    color: $accent;
+  }
+
+  &__nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media (max-width: $bp-md) { display: none; }
+  }
+
+  &__nav-link {
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $text-muted;
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover { color: $text-primary; }
+
+    // Scroll-spy active state
+    &--active {
+      color: $text-primary;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: $accent;
+        border-radius: 1px;
+      }
+    }
+  }
+
+  &__nav-cta {
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $accent;
+    text-decoration: none;
+    border: 1px solid $accent-border;
+    padding: 8px 20px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+    &:hover {
+      background: $accent;
+      color: #fff;
+      border-color: $accent;
+    }
+
+    @media (max-width: $bp-md) { display: none; }
+  }
+
+  &__nav-burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+
+    @media (max-width: $bp-md) { display: flex; }
+
+    span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: $text-primary;
+      border-radius: 2px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    &--open {
+      span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+      span:nth-child(2) { opacity: 0; }
+      span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    }
+  }
+
+  // ── Mobile menu ──────────────────────────────────────────────────────
+  &__mobile-menu {
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: rgba($bg-surface, 0.98);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    animation: slideDown 0.2s ease both;
+
+    ul {
+      list-style: none;
+      padding: 16px 0;
+      margin: 0;
+    }
+  }
+
+  &__mobile-link {
+    display: block;
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-muted;
+    text-decoration: none;
+    transition: color 0.2s, padding-left 0.2s;
+
+    &:hover {
+      color: $text-primary;
+      padding-left: 40px;
+    }
+  }
+
+  // ── Content block ────────────────────────────────────────────────────
+  &__content {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 56px 60px;
+    max-width: 900px;
+
+    // All direct children start invisible
+    > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    // When visible signal fires, animate each child with stagger
+    &--visible {
+      .hero__eyebrow     { animation: fadeSlideUp 0.6s ease map-get($stagger-delays, 'eyebrow')     both; }
+      .hero__name        { animation: fadeSlideUp 0.7s ease map-get($stagger-delays, 'name')        both; }
+      .hero__role        { animation: fadeSlideUp 0.6s ease map-get($stagger-delays, 'role')        both; }
+      .hero__description { animation: fadeSlideUp 0.6s ease map-get($stagger-delays, 'description') both; }
+      .hero__chips       { animation: fadeSlideUp 0.6s ease map-get($stagger-delays, 'chips')       both; }
+      .hero__cta         { animation: fadeSlideUp 0.6s ease map-get($stagger-delays, 'cta')         both; }
+      .hero__stats       { animation: fadeSlideUp 0.6s ease map-get($stagger-delays, 'stats')       both; }
+    }
+
+    @media (max-width: $bp-md) { padding: 60px 24px 48px; }
+  }
+
+  // ── Eyebrow ──────────────────────────────────────────────────────────
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $text-muted;
+    margin-bottom: 20px;
+  }
+
+  &__eyebrow-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: $green-live;
+    flex-shrink: 0;
+    animation: pulseDot 2.4s ease-in-out infinite;
+  }
+
+  // ── Name ─────────────────────────────────────────────────────────────
+  &__name {
+    font-family: $font-display;
+    font-size: clamp(58px, 10vw, 96px);
+    font-weight: 700;
+    line-height: 0.96;
+    letter-spacing: -3px;
+    color: $text-primary;
+    margin-bottom: 16px;
+  }
+
+  &__name-accent {
+    color: $accent;
+    display: inline-block;
+  }
+
+  // ── Typed role ───────────────────────────────────────────────────────
+  &__role {
+    font-family: $font-body;
+    font-size: clamp(14px, 2vw, 17px);
+    font-weight: 400;
+    color: $text-muted;
+    letter-spacing: 0.02em;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+
+    &::before {
+      content: '// ';
+      font-family: $font-mono;
+      color: $text-dim;
+      margin-right: 2px;
+      font-size: 13px;
+    }
+  }
+
+  &__role-text {
+    font-family: $font-mono;
+    font-size: 14px;
+    color: rgba($text-primary, 0.75);
+  }
+
+  &__cursor {
+    font-family: $font-mono;
+    font-size: 16px;
+    color: $accent;
+    margin-left: 2px;
+    transition: opacity 0.1s;
+
+    &--hidden { opacity: 0; }
+  }
+
+  // ── Description ──────────────────────────────────────────────────────
+  &__description {
+    font-family: $font-body;
+    font-size: clamp(14px, 1.6vw, 16px);
+    font-weight: 400;
+    line-height: 1.75;
+    color: $text-muted;
+    max-width: 540px;
+    margin-bottom: 28px;
+
+    strong {
+      color: rgba($text-primary, 0.85);
+      font-weight: 500;
+    }
+  }
+
+  // ── Tech chips ───────────────────────────────────────────────────────
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 36px;
+  }
+
+  &__chip {
+    font-family: $font-body;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid $accent-border;
+    color: $accent;
+    background: $accent-dim;
+    transition: background 0.2s, border-color 0.2s;
+
+    &:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.6);
+    }
+  }
+
+  // ── CTA Buttons ──────────────────────────────────────────────────────
+  &__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+
+  &__cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #fff;
+    background: $accent;
+    border: 1px solid $accent;
+    padding: 12px 26px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+
+    svg { transition: transform 0.2s; }
+
+    &:hover {
+      background: lighten($accent, 6%);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba($accent, 0.35);
+      svg { transform: translateX(3px); }
+    }
+
+    &:active { transform: translateY(0); }
+  }
+
+  &__cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: $text-muted;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 26px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: $text-primary;
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+
+  &__cta-ghost {
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 500;
+    color: $text-muted;
+    text-decoration: none;
+    border-bottom: 1px solid $text-dim;
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: $text-primary;
+      border-color: $text-muted;
+    }
+  }
+
+  // ── Stats ────────────────────────────────────────────────────────────
+  &__stats {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__stat-num {
+    font-family: $font-display;
+    font-size: 26px;
+    font-weight: 700;
+    color: $text-primary;
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
+
+  &__stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__stat-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+  }
+
+  // ── Scroll indicator ─────────────────────────────────────────────────
+  &__scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 56px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 2s both;
+
+    @media (max-width: $bp-md) { left: 24px; }
+  }
+
+  &__scroll-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: $text-dim;
+  }
+
+  &__scroll-track {
+    width: 1px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+    border-radius: 1px;
+  }
+
+  &__scroll-thumb {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 16px;
+    background: $accent;
+    border-radius: 1px;
+    animation: scrollBob 1.8s ease-in-out 2.2s infinite;
+  }
+}
+
+// ─── Reduced motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    &__content > *,
+    &__content--visible .hero__eyebrow,
+    &__content--visible .hero__name,
+    &__content--visible .hero__role,
+    &__content--visible .hero__description,
+    &__content--visible .hero__chips,
+    &__content--visible .hero__cta,
+    &__content--visible .hero__stats {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    &__eyebrow-dot,
+    &__scroll-thumb { animation: none !important; }
+  }
+}

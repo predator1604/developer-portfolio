@@ -1,0 +1,570 @@
+// ─── Design Tokens ───────────────────────────────────────────────────────────
+$bg-deep:        #0a0a0f;
+$bg-surface:     #10101a;
+$bg-surface-alt: #0d0d18;
+$accent:         #6366f1;
+$accent-dim:     rgba(99, 102, 241, 0.12);
+$accent-border:  rgba(99, 102, 241, 0.25);
+$text-primary:   #f0f0f8;
+$text-secondary: #c0c0d0;
+$text-muted:     #6b6b82;
+$text-dim:       #3a3a52;
+$font-display:   'Space Grotesk', 'Inter', system-ui, sans-serif;
+$font-body:      'Inter', system-ui, sans-serif;
+$font-mono:      'JetBrains Mono', 'Fira Code', monospace;
+
+// ─── Breakpoints ─────────────────────────────────────────────────────────────
+$bp-lg: 1024px;
+$bp-md: 768px;
+$bp-sm: 480px;
+
+// ─── Animations ──────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(32px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+@keyframes compactIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+// ─── Component ───────────────────────────────────────────────────────────────
+.projects {
+  position: relative;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 120px 56px;
+  background: $bg-deep;
+
+  // Consistent top separator
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 56px; right: 56px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(99, 102, 241, 0.3) 30%,
+      rgba(99, 102, 241, 0.3) 70%,
+      transparent 100%
+    );
+  }
+
+  @media (max-width: $bp-md) {
+    padding: 80px 32px;
+    &::before { left: 32px; right: 32px; }
+  }
+
+  @media (max-width: $bp-sm) {
+    padding: 64px 20px;
+    &::before { left: 20px; right: 20px; }
+  }
+
+  // ── Section Header ────────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 48px;
+    margin-bottom: 52px;
+    opacity: 0;
+    transform: translateY(24px);
+
+    @media (max-width: $bp-md) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    &--visible {
+      animation: fadeSlideUp 0.6s ease 0s both;
+
+      .projects__eyebrow     { animation: fadeSlideUp 0.5s ease 0.05s both; }
+      .projects__heading     { animation: fadeSlideUp 0.6s ease 0.12s both; }
+      .projects__description { animation: fadeSlideUp 0.5s ease 0.22s both; }
+      .projects__github-link { animation: fadeSlideUp 0.5s ease 0.32s both; }
+    }
+  }
+
+  &__header-left  { flex-shrink: 0; }
+  &__header-right {
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    @media (max-width: $bp-md) { max-width: 100%; }
+  }
+
+  // ── Eyebrow ───────────────────────────────────────────────────────────
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $accent;
+    margin-bottom: 18px;
+    opacity: 0;
+
+    &::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: $accent;
+      flex-shrink: 0;
+    }
+  }
+
+  // ── Heading ───────────────────────────────────────────────────────────
+  &__heading {
+    font-family: $font-display;
+    font-size: clamp(40px, 6vw, 60px);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -2px;
+    color: $text-primary;
+    opacity: 0;
+  }
+
+  &__heading-accent {
+    color: $accent;
+    font-style: italic;
+  }
+
+  // ── Description ───────────────────────────────────────────────────────
+  &__description {
+    font-size: 14px;
+    line-height: 1.8;
+    color: $text-muted;
+    opacity: 0;
+
+    strong { color: $text-secondary; font-weight: 500; }
+  }
+
+  // ── GitHub header link ────────────────────────────────────────────────
+  &__github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-dim;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid $text-dim;
+    padding-bottom: 2px;
+    width: fit-content;
+    opacity: 0;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      color: $text-muted;
+      border-color: $text-muted;
+    }
+  }
+
+  // ── Featured grid ─────────────────────────────────────────────────────
+  &__featured {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    @media (max-width: $bp-lg) {
+      grid-template-columns: 1fr;
+    }
+
+    &--visible {
+      .projects__card--featured {
+        animation: cardIn 0.6s ease both;
+        animation-delay: var(--card-delay, 0ms);
+      }
+    }
+  }
+
+  // ── Compact row ───────────────────────────────────────────────────────
+  &__compact-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    @media (max-width: $bp-md) {
+      grid-template-columns: 1fr;
+    }
+
+    &--visible {
+      .projects__card--compact,
+      .projects__github-card {
+        animation: compactIn 0.5s ease both;
+        animation-delay: var(--card-delay, 0ms);
+      }
+
+      .projects__github-card {
+        animation-delay: 200ms;
+      }
+    }
+  }
+
+  // ── Base card styles ──────────────────────────────────────────────────
+  &__card {
+    background: $bg-surface;
+    border-radius: 16px;
+    overflow: hidden;
+    opacity: 0;
+    transition: border-color 0.25s, transform 0.25s;
+
+    &--featured {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+
+      &:hover {
+        border-color: rgba(var(--card-accent, 99 102 241), 0.3);
+        transform: translateY(-3px);
+      }
+    }
+
+    &--compact {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // ── Featured card internals ───────────────────────────────────────────
+  &__card-stripe {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  &__card-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__card-num {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: $text-dim;
+    letter-spacing: 0.1em;
+  }
+
+  &__card-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: $text-muted;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: $text-primary;
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+
+  &__card-category {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  &__card-title {
+    font-family: $font-display;
+    font-size: 22px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  &__card-desc {
+    font-size: 13px;
+    line-height: 1.75;
+    color: $text-muted;
+    margin-bottom: 16px;
+
+    :deep(strong) { color: $text-secondary; font-weight: 500; }
+  }
+
+  // ── Key feature callout ───────────────────────────────────────────────
+  &__card-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px 15px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    margin-bottom: 18px;
+  }
+
+  &__feature-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  &__feature-text {
+    font-size: 12px;
+    line-height: 1.65;
+    color: $text-muted;
+
+    :deep(strong) { color: $text-secondary; font-weight: 500; }
+  }
+
+  // ── Stack chips ───────────────────────────────────────────────────────
+  &__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 18px;
+  }
+
+  &__stack-chip {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.75; }
+  }
+
+  // ── Card footer ───────────────────────────────────────────────────────
+  &__card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  &__card-cta {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  // ── Status badge ─────────────────────────────────────────────────────
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__status-label {
+    font-size: 11px;
+    color: $text-dim;
+    letter-spacing: 0.06em;
+  }
+
+  // ── Compact card internals ────────────────────────────────────────────
+  &__compact-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__compact-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__compact-num {
+    font-family: $font-mono;
+    font-size: 10px;
+    color: $text-dim;
+    letter-spacing: 0.1em;
+  }
+
+  &__compact-title {
+    font-family: $font-display;
+    font-size: 17px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+
+  &__compact-desc {
+    font-size: 12px;
+    line-height: 1.7;
+    color: $text-muted;
+    flex: 1;
+
+    :deep(strong) { color: $text-secondary; font-weight: 500; }
+  }
+
+  &__compact-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__compact-chip {
+    font-family: $font-mono;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    letter-spacing: 0.04em;
+  }
+
+  &__compact-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    margin-top: auto;
+  }
+
+  &__compact-link {
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  // ── GitHub CTA card ───────────────────────────────────────────────────
+  &__github-card {
+    border: 1px dashed rgba(99, 102, 241, 0.2);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    min-height: 200px;
+    opacity: 0;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+  }
+
+  &__github-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $accent;
+  }
+
+  &__github-hint {
+    font-size: 13px;
+    color: $text-dim;
+    line-height: 1.5;
+  }
+
+  &__github-btn {
+    font-size: 12px;
+    font-weight: 600;
+    color: $accent;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(99, 102, 241, 0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+
+    &:hover { border-color: $accent; }
+  }
+}
+
+// ─── Reduced Motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .projects {
+    &__header,
+    &__card,
+    &__github-card {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    &__header--visible {
+      .projects__eyebrow,
+      .projects__heading,
+      .projects__description,
+      .projects__github-link {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  }
+}

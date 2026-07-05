@@ -1,0 +1,121 @@
+<section class="about" id="about" aria-labelledby="about-heading">
+
+  <!-- ── Left Column ─────────────────────────────────────────────── -->
+  <div class="about__left" appObserveVisibility visibleClass="about__left--visible" [threshold]="0.1"
+    (visible)="leftVisible.set(true)">
+    <!-- Eyebrow -->
+    <div class="about__eyebrow" aria-hidden="true">About me</div>
+
+    <!-- Heading -->
+    <h2 class="about__heading" id="about-heading">
+      Crafting<br />
+      <span class="about__heading-accent">intelligent</span><br />
+      systems.
+    </h2>
+
+    <p class="about__subheading">Engineer · Architect · AI Builder</p>
+
+    <!-- Bio -->
+    <div class="about__bio" role="region" aria-label="Biography">
+      @for (para of bioParagraphs; track $index) {
+      <p class="about__bio-para" [innerHTML]="para"></p>
+      }
+    </div>
+
+    <!-- Divider -->
+    <div class="about__divider" aria-hidden="true"></div>
+
+    <!-- Personal Info Grid -->
+    <dl class="about__info-grid" aria-label="Personal information">
+      @for (info of personalInfo; track info.label) {
+      <div class="about__info-item">
+        <dt class="about__info-label">{{ info.label }}</dt>
+        <dd class="about__info-value" [class.about__info-value--green]="info.highlight === 'green'"
+          [class.about__info-value--accent]="info.highlight === 'accent'">
+          @if (info.isLink && info.href) {
+          <a [href]="info.href" target="_blank" rel="noopener noreferrer" class="about__info-link"
+            [attr.aria-label]="info.label + ': ' + info.value">{{ info.value }}</a>
+          } @else {
+          {{ info.value }}
+          }
+        </dd>
+      </div>
+      }
+    </dl>
+
+    <!-- CTA Buttons -->
+    <div class="about__cta" role="group" aria-label="Actions">
+      <a class="about__cta-primary" href="/assets/resume.pdf" target="_blank" rel="noopener"
+        aria-label="Download resume PDF">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+          <path d="M7.5 1v9M4 7l3.5 3.5L11 7M2 13h11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        Download Resume
+      </a>
+      <a class="about__cta-secondary" [routerLink]="['/']" fragment="projects" aria-label="Jump to projects section">
+        View Projects →
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Right Column ────────────────────────────────────────────── -->
+  <div class="about__right" appObserveVisibility visibleClass="about__right--visible" [threshold]="0.1"
+    (visible)="rightVisible.set(true)">
+
+    <!-- Avatar / Photo -->
+    <div class="about__avatar-wrap" role="img" aria-label="Profile photo placeholder">
+      <div class="about__avatar-glow" aria-hidden="true"></div>
+      <div class="about__avatar-frame">
+        <!-- Replace <div class="about__avatar-placeholder"> with <img> once you have a photo:
+             <img src="assets/images/avatar.jpg" alt="Your Name" class="about__avatar-img" /> -->
+        <div class="about__avatar-placeholder" aria-hidden="true">
+          <div class="about__avatar-ring about__avatar-ring--1"></div>
+          <div class="about__avatar-ring about__avatar-ring--2"></div>
+          <div class="about__avatar-ring about__avatar-ring--3"></div>
+          <div class="about__avatar-initials-wrap">
+            <span class="about__avatar-initials">PRASHANT</span>
+          </div>
+        </div>
+        <!-- Corner accents -->
+        <span class="about__avatar-corner about__avatar-corner--tl" aria-hidden="true"></span>
+        <span class="about__avatar-corner about__avatar-corner--br" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <ul class="about__stats" role="list" aria-label="Quick stats">
+      @for (stat of statCards; track stat.description) {
+      <li class="about__stat" role="listitem">
+        <span class="about__stat-num">
+          {{ stat.value }}<span class="about__stat-suffix">{{ stat.suffix }}</span>
+        </span>
+        <span class="about__stat-desc">{{ stat.description }}</span>
+      </li>
+      }
+    </ul>
+
+    <!-- Decorative Code Card -->
+    <figure class="about__code-card" aria-label="Code snippet representing the engineer's profile" role="figure">
+      <!-- Window chrome -->
+      <div class="about__code-chrome" aria-hidden="true">
+        <span class="about__code-dot about__code-dot--red"></span>
+        <span class="about__code-dot about__code-dot--amber"></span>
+        <span class="about__code-dot about__code-dot--green"></span>
+        <span class="about__code-filename">about.ts</span>
+        <span class="about__code-lang">TypeScript</span>
+      </div>
+
+      <!-- Code body -->
+      <pre class="about__code-body" aria-hidden="true"><code>@for (line of codeLines; track $index) {
+        @if (line.type === 'blank') {
+          <span class="about__code-line about__code-line--blank">&nbsp;</span>
+        } @else {
+          <span class="about__code-line" [innerHTML]="line.raw"></span>
+        }
+      }</code></pre>
+    </figure>
+
+  </div>
+
+</section>
