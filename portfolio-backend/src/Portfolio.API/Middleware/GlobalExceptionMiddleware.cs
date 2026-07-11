@@ -47,8 +47,6 @@ public sealed class GlobalExceptionMiddleware(
             detail = env.IsDevelopment() ? exception.StackTrace : null,
         };
 
-        return context.Response.WriteAsync(
-            JsonSerializer.Serialize(response,
-                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+        return context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
     }
 }

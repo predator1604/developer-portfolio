@@ -8,9 +8,7 @@ namespace Portfolio.Domain.ValueObjects;
 /// </summary>
 public sealed class Email : IEquatable<Email>
 {
-    private static readonly Regex _regex =
-        new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private static readonly Regex _regex = new(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     public string Value { get; }
 
@@ -28,14 +26,11 @@ public sealed class Email : IEquatable<Email>
 
     public override string ToString() => Value;
 
-    public bool Equals(Email? other) =>
-        other is not null && Value == other.Value;
+    public bool Equals(Email? other) => other is not null && Value == other.Value;
 
-    public override bool Equals(object? obj) =>
-        obj is Email other && Equals(other);
+    public override bool Equals(object? obj) => obj is Email other && Equals(other);
 
-    public override int GetHashCode() =>
-        HashCode.Combine(Value);
+    public override int GetHashCode() => HashCode.Combine(Value);
 
     public static implicit operator string(Email email) => email.Value;
 }

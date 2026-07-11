@@ -9,15 +9,18 @@ namespace Portfolio.Domain.Entities;
 /// </summary>
 public sealed class ChatSession : BaseEntity
 {
-    public string           SessionId { get; private set; }
-    public string?          VisitorIp { get; private set; }
-    public List<ChatMessage> Messages  { get; private set; }
-    public DateTime?        EndedAt   { get; private set; }
+    public string SessionId { get; private set; }
+
+    public string? VisitorIp { get; private set; }
+
+    public List<ChatMessage> Messages { get; private set; }
+
+    public DateTime? EndedAt { get; private set; }
 
     private ChatSession()
     {
         SessionId = string.Empty;
-        Messages  = [];
+        Messages = [];
     }
 
     public static ChatSession Create(string sessionId, string? visitorIp = null)
@@ -27,7 +30,7 @@ public sealed class ChatSession : BaseEntity
         {
             SessionId = sessionId,
             VisitorIp = visitorIp,
-            Messages  = [],
+            Messages = [],
         };
     }
 
@@ -35,8 +38,8 @@ public sealed class ChatSession : BaseEntity
     {
         Messages.Add(new ChatMessage
         {
-            Role      = role,
-            Content   = content,
+            Role = role,
+            Content = content,
             Timestamp = DateTime.UtcNow,
         });
         Touch();
@@ -48,7 +51,9 @@ public sealed class ChatSession : BaseEntity
 /// <summary>Embedded chat message within a ChatSession document.</summary>
 public sealed class ChatMessage
 {
-    public ChatMessageRole Role      { get; set; }
-    public string          Content   { get; set; } = string.Empty;
-    public DateTime        Timestamp { get; set; }
+    public ChatMessageRole Role { get; set; }
+
+    public string Content { get; set; } = string.Empty;
+
+    public DateTime Timestamp { get; set; }
 }

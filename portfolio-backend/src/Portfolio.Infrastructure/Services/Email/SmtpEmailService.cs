@@ -11,14 +11,21 @@ namespace Portfolio.Infrastructure.Services.Email;
 
 public sealed class SmtpSettings
 {
-    public string Host        { get; init; } = "localhost";
-    public int    Port        { get; init; } = 587;
-    public string Username    { get; init; } = string.Empty;
-    public string Password    { get; init; } = string.Empty;
-    public string FromEmail   { get; init; } = string.Empty;
-    public string FromName    { get; init; } = "Portfolio";
-    public string OwnerEmail  { get; init; } = string.Empty;   // where to notify you
-    public bool   UseSsl      { get; init; } = false;
+    public string Host { get; init; } = "localhost";
+
+    public int Port { get; init; } = 587;
+
+    public string Username { get; init; } = string.Empty;
+
+    public string Password { get; init; } = string.Empty;
+
+    public string FromEmail { get; init; } = string.Empty;
+
+    public string FromName { get; init; } = "Portfolio";
+
+    public string OwnerEmail { get; init; } = string.Empty;   // where to notify you
+
+    public bool UseSsl { get; init; } = false;
 }
 
 // ── Service ───────────────────────────────────────────────────────────────────
@@ -28,9 +35,7 @@ public sealed class SmtpSettings
 /// Works locally with MailHog (port 1025) and in production with any SMTP provider
 /// (Gmail, Outlook, SMTP2GO) — just swap appsettings values.
 /// </summary>
-public sealed class SmtpEmailService(
-    IOptions<SmtpSettings> options,
-    ILogger<SmtpEmailService> logger) : IEmailService
+public sealed class SmtpEmailService(IOptions<SmtpSettings> options, ILogger<SmtpEmailService> logger) : IEmailService
 {
     private readonly SmtpSettings _settings = options.Value;
 
@@ -60,8 +65,7 @@ public sealed class SmtpEmailService(
         logger.LogInformation("Contact notification sent for {SenderEmail}", senderEmail);
     }
 
-    public async Task SendContactConfirmationAsync(
-        string toEmail, string toName, CancellationToken ct = default)
+    public async Task SendContactConfirmationAsync(string toEmail, string toName, CancellationToken ct = default)
     {
         var email = new MimeMessage();
         email.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));

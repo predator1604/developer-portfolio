@@ -10,27 +10,38 @@ namespace Portfolio.Application.Features.Projects.Commands;
 // ── Create ────────────────────────────────────────────────────────────────────
 
 public sealed record CreateProjectCommand(
-    string       Title,
-    string       Slug,
-    string       Category,
-    string       Description,
+    string Title,
+
+    string Slug,
+
+    string Category,
+
+    string Description,
+
     List<string> Stack,
-    string       AccentColor,
-    string       AccentBg,
-    string       Status,
-    string       StatusLabel,
-    int          SortOrder,
-    string?      Feature    = null,
-    string?      LiveUrl    = null,
-    string?      GitHubUrl  = null) : IRequest<Result<ProjectDto>>;
+
+    string AccentColor,
+
+    string AccentBg,
+
+    string Status,
+
+    string StatusLabel,
+
+    int SortOrder,
+
+    string? Feature = null,
+
+    string? LiveUrl = null,
+
+    string? GitHubUrl = null) : IRequest<Result<ProjectDto>>;
 
 public sealed class CreateProjectValidator : AbstractValidator<CreateProjectCommand>
 {
     public CreateProjectValidator()
     {
         RuleFor(x => x.Title).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.Slug).NotEmpty()
-            .Matches("^[a-z0-9-]+$").WithMessage("Slug must be lowercase with hyphens only.");
+        RuleFor(x => x.Slug).NotEmpty().Matches("^[a-z0-9-]+$").WithMessage("Slug must be lowercase with hyphens only.");
         RuleFor(x => x.Description).NotEmpty().MaximumLength(1000);
         RuleFor(x => x.Stack).NotEmpty().WithMessage("At least one tech is required.");
         RuleFor(x => x.AccentColor).NotEmpty();
@@ -38,11 +49,9 @@ public sealed class CreateProjectValidator : AbstractValidator<CreateProjectComm
     }
 }
 
-public sealed class CreateProjectHandler(IProjectRepository repo)
-    : IRequestHandler<CreateProjectCommand, Result<ProjectDto>>
+public sealed class CreateProjectHandler(IProjectRepository repo) : IRequestHandler<CreateProjectCommand, Result<ProjectDto>>
 {
-    public async Task<Result<ProjectDto>> Handle(
-        CreateProjectCommand cmd, CancellationToken ct)
+    public async Task<Result<ProjectDto>> Handle(CreateProjectCommand cmd, CancellationToken ct)
     {
         var existing = await repo.GetBySlugAsync(cmd.Slug, ct);
         if (existing is not null)
@@ -62,23 +71,21 @@ public sealed class CreateProjectHandler(IProjectRepository repo)
 // ── Update ────────────────────────────────────────────────────────────────────
 
 public sealed record UpdateProjectCommand(
-    string       Id,
-    string       Title,
-    string       Category,
-    string       Description,
+    string Id,
+    string Title,
+    string Category,
+    string Description,
     List<string> Stack,
-    string       Status,
-    string       StatusLabel,
-    bool         IsVisible,
-    string?      Feature    = null,
-    string?      LiveUrl    = null,
-    string?      GitHubUrl  = null) : IRequest<Result<ProjectDto>>;
+    string Status,
+    string StatusLabel,
+    bool IsVisible,
+    string? Feature = null,
+    string? LiveUrl = null,
+    string? GitHubUrl = null) : IRequest<Result<ProjectDto>>;
 
-public sealed class UpdateProjectHandler(IProjectRepository repo)
-    : IRequestHandler<UpdateProjectCommand, Result<ProjectDto>>
+public sealed class UpdateProjectHandler(IProjectRepository repo) : IRequestHandler<UpdateProjectCommand, Result<ProjectDto>>
 {
-    public async Task<Result<ProjectDto>> Handle(
-        UpdateProjectCommand cmd, CancellationToken ct)
+    public async Task<Result<ProjectDto>> Handle(UpdateProjectCommand cmd, CancellationToken ct)
     {
         var project = await repo.GetByIdAsync(cmd.Id, ct);
         if (project is null)
@@ -97,8 +104,7 @@ public sealed class UpdateProjectHandler(IProjectRepository repo)
 
 public sealed record DeleteProjectCommand(string Id) : IRequest<Result>;
 
-public sealed class DeleteProjectHandler(IProjectRepository repo)
-    : IRequestHandler<DeleteProjectCommand, Result>
+public sealed class DeleteProjectHandler(IProjectRepository repo) : IRequestHandler<DeleteProjectCommand, Result>
 {
     public async Task<Result> Handle(DeleteProjectCommand cmd, CancellationToken ct)
     {

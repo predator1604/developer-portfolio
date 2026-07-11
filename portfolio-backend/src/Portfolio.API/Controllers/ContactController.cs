@@ -13,9 +13,7 @@ public sealed class ContactController(ISender sender) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(SendMessageResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Send(
-        [FromBody] SendMessageCommand command,
-        CancellationToken ct)
+    public async Task<IActionResult> Send([FromBody] SendMessageCommand command, CancellationToken ct)
     {
         var result = await sender.Send(command, ct);
         return result.IsSuccess
@@ -26,10 +24,7 @@ public sealed class ContactController(ISender sender) : ControllerBase
     /// <summary>Get paginated list of all messages (admin).</summary>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<ContactMessageDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        CancellationToken ct = default)
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken ct = default)
     {
         var result = await sender.Send(new GetMessagesQuery(page, pageSize), ct);
         return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);

@@ -14,26 +14,15 @@ public sealed record ChatMessageDto(string Role, string Content, DateTime Timest
 
 // ── Command ───────────────────────────────────────────────────────────────────
 
-public sealed record SendChatMessageCommand(
-    string SessionId,
-    string UserMessage,
-    string? VisitorIp = null) : IRequest<Result<ChatResponseDto>>;
+public sealed record SendChatMessageCommand(string SessionId, string UserMessage, string? VisitorIp = null) : IRequest<Result<ChatResponseDto>>;
 
-public sealed record ChatResponseDto(
-    string SessionId,
-    string AssistantReply,
-    List<ChatMessageDto> History);
+public sealed record ChatResponseDto(string SessionId, string AssistantReply, List<ChatMessageDto> History);
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
-public sealed class SendChatMessageHandler(
-    IChatSessionRepository chatRepo,
-    IAiChatService         aiService,
-    ILogger<SendChatMessageHandler> logger)
-    : IRequestHandler<SendChatMessageCommand, Result<ChatResponseDto>>
+public sealed class SendChatMessageHandler(IChatSessionRepository chatRepo, IAiChatService aiService, ILogger<SendChatMessageHandler> logger) : IRequestHandler<SendChatMessageCommand, Result<ChatResponseDto>>
 {
-    public async Task<Result<ChatResponseDto>> Handle(
-        SendChatMessageCommand cmd, CancellationToken ct)
+    public async Task<Result<ChatResponseDto>> Handle(SendChatMessageCommand cmd, CancellationToken ct)
     {
         try
         {

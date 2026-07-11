@@ -18,11 +18,9 @@ public sealed class ContactRepository(MongoDbContext ctx) : IContactRepository
         return msg;
     }
 
-    public async Task<ContactMessage?> GetByIdAsync(string id, CancellationToken ct = default) =>
-        await _col.Find(m => m.Id == id).FirstOrDefaultAsync(ct);
+    public async Task<ContactMessage?> GetByIdAsync(string id, CancellationToken ct = default) => await _col.Find(m => m.Id == id).FirstOrDefaultAsync(ct);
 
-    public async Task<IReadOnlyList<ContactMessage>> GetAllAsync(
-        int page, int pageSize, CancellationToken ct = default)
+    public async Task<IReadOnlyList<ContactMessage>> GetAllAsync(int page, int pageSize, CancellationToken ct = default)
     {
         return await _col.Find(_ => true)
             .SortByDescending(m => m.CreatedAt)
@@ -31,17 +29,14 @@ public sealed class ContactRepository(MongoDbContext ctx) : IContactRepository
             .ToListAsync(ct);
     }
 
-    public async Task<IReadOnlyList<ContactMessage>> GetByStatusAsync(
-        MessageStatus status, CancellationToken ct = default) =>
+    public async Task<IReadOnlyList<ContactMessage>> GetByStatusAsync(MessageStatus status, CancellationToken ct = default) => 
         await _col.Find(m => m.Status == status)
                   .SortByDescending(m => m.CreatedAt)
                   .ToListAsync(ct);
 
-    public async Task UpdateAsync(ContactMessage msg, CancellationToken ct = default) =>
-        await _col.ReplaceOneAsync(m => m.Id == msg.Id, msg, cancellationToken: ct);
+    public async Task UpdateAsync(ContactMessage msg, CancellationToken ct = default) => await _col.ReplaceOneAsync(m => m.Id == msg.Id, msg, cancellationToken: ct);
 
-    public async Task<long> CountAsync(CancellationToken ct = default) =>
-        await _col.CountDocumentsAsync(_ => true, cancellationToken: ct);
+    public async Task<long> CountAsync(CancellationToken ct = default) => await _col.CountDocumentsAsync(_ => true, cancellationToken: ct);
 }
 
 // ── Project ───────────────────────────────────────────────────────────────────

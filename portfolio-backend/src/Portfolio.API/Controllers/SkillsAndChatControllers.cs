@@ -35,9 +35,7 @@ public sealed class ChatController(ISender sender) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ChatResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Chat(
-        [FromBody] SendChatMessageCommand command,
-        CancellationToken ct)
+    public async Task<IActionResult> Chat([FromBody] SendChatMessageCommand command, CancellationToken ct)
     {
         // Attach visitor IP for session tracking
         var cmd = command with

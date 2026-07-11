@@ -11,16 +11,9 @@ namespace Portfolio.Application.Common.Behaviours;
 /// Runs all registered FluentValidation validators.
 /// Returns a Result failure instead of throwing exceptions.
 /// </summary>
-public sealed class ValidationBehaviour<TRequest, TResponse>(
-    IEnumerable<IValidator<TRequest>> validators,
-    ILogger<ValidationBehaviour<TRequest, TResponse>> logger)
-    : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public sealed class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators, ILogger<ValidationBehaviour<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         if (!validators.Any()) return await next();
 
@@ -61,17 +54,11 @@ public sealed class ValidationBehaviour<TRequest, TResponse>(
 /// Logs every request entering and leaving the MediatR pipeline.
 /// Measures execution time and warns on slow queries (>500ms).
 /// </summary>
-public sealed class LoggingBehaviour<TRequest, TResponse>(
-    ILogger<LoggingBehaviour<TRequest, TResponse>> logger)
-    : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public sealed class LoggingBehaviour<TRequest, TResponse>(ILogger<LoggingBehaviour<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private const int SlowRequestThresholdMs = 500;
 
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         var name  = typeof(TRequest).Name;
         var start = DateTime.UtcNow;

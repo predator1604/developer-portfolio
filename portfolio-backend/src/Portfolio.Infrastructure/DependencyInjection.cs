@@ -12,29 +12,26 @@ namespace Portfolio.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration config)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         // ── MongoDB ───────────────────────────────────────────────────────────
         services.Configure<MongoDbSettings>(config.GetSection("MongoDB"));
 
         var mongoSettings = config.GetSection("MongoDB").Get<MongoDbSettings>()!;
 
-        services.AddSingleton<IMongoClient>(_ =>
-            new MongoClient(mongoSettings.ConnectionString));
+        services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoSettings.ConnectionString));
 
         services.AddSingleton(sp =>
         {
-            var client   = sp.GetRequiredService<IMongoClient>();
+            var client = sp.GetRequiredService<IMongoClient>();
             var settings = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<MongoDbSettings>>();
             return new MongoDbContext(client, settings.Value);
         });
 
         // ── Repositories ──────────────────────────────────────────────────────
-        services.AddScoped<IContactRepository,    ContactRepository>();
-        services.AddScoped<IProjectRepository,    ProjectRepository>();
-        services.AddScoped<ISkillRepository,      SkillRepository>();
+        services.AddScoped<IContactRepository, ContactRepository>();
+        services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<ISkillRepository, SkillRepository>();
         services.AddScoped<IChatSessionRepository, ChatSessionRepository>();
 
         // ── Email ─────────────────────────────────────────────────────────────

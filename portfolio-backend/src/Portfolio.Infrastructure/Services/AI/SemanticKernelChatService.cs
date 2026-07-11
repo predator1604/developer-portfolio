@@ -10,10 +10,14 @@ namespace Portfolio.Infrastructure.Services.AI;
 
 public sealed class AiSettings
 {
-    public string Provider   { get; init; } = "OpenAI";   // "OpenAI" | "AzureOpenAI"
-    public string ApiKey     { get; init; } = string.Empty;
-    public string ModelId    { get; init; } = "gpt-4o-mini";
-    public string? Endpoint  { get; init; }                // Required for Azure OpenAI
+    public string Provider { get; init; } = "OpenAI";   // "OpenAI" | "AzureOpenAI"
+
+    public string ApiKey { get; init; } = string.Empty;
+
+    public string ModelId { get; init; } = "gpt-4o-mini";
+
+    public string? Endpoint { get; init; }                // Required for Azure OpenAI
+
     public string? DeploymentName { get; init; }           // Required for Azure OpenAI
 }
 
@@ -25,9 +29,7 @@ public sealed class AiSettings
 /// projects (NexusAgent, CognitiveFlow, OpsMind), and tech stack so it can
 /// answer visitor questions intelligently.
 /// </summary>
-public sealed class SemanticKernelChatService(
-    IOptions<AiSettings> options,
-    ILogger<SemanticKernelChatService> logger) : IAiChatService
+public sealed class SemanticKernelChatService(IOptions<AiSettings> options, ILogger<SemanticKernelChatService> logger) : IAiChatService
 {
     private readonly AiSettings _settings = options.Value;
 
@@ -65,10 +67,7 @@ public sealed class SemanticKernelChatService(
         - Keep responses under 150 words unless detail is specifically requested.
         """;
 
-    public async Task<string> ChatAsync(
-        string userMessage,
-        IReadOnlyList<(string Role, string Content)> conversationHistory,
-        CancellationToken ct = default)
+    public async Task<string> ChatAsync(string userMessage, IReadOnlyList<(string Role, string Content)> conversationHistory, CancellationToken ct = default)
     {
         try
         {

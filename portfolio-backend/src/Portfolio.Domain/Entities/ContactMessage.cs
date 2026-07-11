@@ -11,33 +11,41 @@ namespace Portfolio.Domain.Entities;
 /// </summary>
 public sealed class ContactMessage : BaseEntity
 {
-    public string Name    { get; private set; }
-    public Email   Email   { get; private set; }
+    public string Name { get; private set; }
+
+    public Email Email { get; private set; }
+
     public string Subject { get; private set; }
+
     public string Message { get; private set; }
+
     public MessageStatus Status { get; private set; }
+
     public string? ReplyNote { get; private set; }
+
     public DateTime? RepliedAt { get; private set; }
 
+
     private readonly List<IDomainEvent> _domainEvents = [];
+
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     // Required for MongoDB deserialization
     private ContactMessage() 
     {
-        Name    = string.Empty;
+        Name = string.Empty;
         Subject = string.Empty;
         Message = string.Empty;
-        Email   = Email.Create("placeholder@placeholder.com");
+        Email = Email.Create("placeholder@placeholder.com");
     }
 
     private ContactMessage(string name, Email email, string subject, string message)
     {
-        Name    = name;
-        Email   = email;
+        Name = name;
+        Email = email;
         Subject = subject;
         Message = message;
-        Status  = MessageStatus.New;
+        Status = MessageStatus.New;
     }
 
     /// <summary>Factory method — enforces creation invariants.</summary>
@@ -65,8 +73,8 @@ public sealed class ContactMessage : BaseEntity
     /// <summary>Attach an admin reply note and mark as replied.</summary>
     public void MarkAsReplied(string replyNote)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(replyNote);
-        Status    = MessageStatus.Replied;
+        ArgumentException.ThrowINullOrWhiteSpace(replyNote);
+        Status = MessageStatus.Replied;
         ReplyNote = replyNote;
         RepliedAt = DateTime.UtcNow;
         Touch();

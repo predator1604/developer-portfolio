@@ -10,11 +10,7 @@ namespace Portfolio.Application.Features.Contact.Commands;
 
 // ── Command ───────────────────────────────────────────────────────────────────
 
-public sealed record SendMessageCommand(
-    string Name,
-    string Email,
-    string Subject,
-    string Message) : IRequest<Result<SendMessageResponse>>;
+public sealed record SendMessageCommand(string Name, string Email, string Subject, string Message) : IRequest<Result<SendMessageResponse>>;
 
 public sealed record SendMessageResponse(string MessageId, string ConfirmationText);
 
@@ -47,16 +43,9 @@ public sealed class SendMessageValidator : AbstractValidator<SendMessageCommand>
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 
-public sealed class SendMessageHandler(
-    IContactRepository  contactRepo,
-    IEmailService       emailService,
-    IPublisher          publisher,
-    ILogger<SendMessageHandler> logger)
-    : IRequestHandler<SendMessageCommand, Result<SendMessageResponse>>
+public sealed class SendMessageHandler(IContactRepository  contactRepo, IEmailService emailService, IPublisher publisher, ILogger<SendMessageHandler> logger) : IRequestHandler<SendMessageCommand, Result<SendMessageResponse>>
 {
-    public async Task<Result<SendMessageResponse>> Handle(
-        SendMessageCommand cmd,
-        CancellationToken ct)
+    public async Task<Result<SendMessageResponse>> Handle(SendMessageCommand cmd, CancellationToken ct)
     {
         try
         {

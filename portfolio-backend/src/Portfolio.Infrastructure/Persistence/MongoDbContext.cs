@@ -11,13 +11,16 @@ namespace Portfolio.Infrastructure.Persistence;
 public sealed class MongoDbSettings
 {
     public string ConnectionString { get; init; } = string.Empty;
-    public string DatabaseName     { get; init; } = "portfolio_db";
 
-    // Collection names
-    public string ContactMessages  { get; init; } = "contact_messages";
-    public string Projects         { get; init; } = "projects";
-    public string SkillGroups      { get; init; } = "skill_groups";
-    public string ChatSessions     { get; init; } = "chat_sessions";
+    public string DatabaseName { get; init; } = "portfolio_db";
+
+    public string ContactMessages { get; init; } = "contact_messages";
+
+    public string Projects { get; init; } = "projects";
+
+    public string SkillGroups { get; init; } = "skill_groups";
+
+    public string ChatSessions { get; init; } = "chat_sessions";
 }
 
 // ── Context ───────────────────────────────────────────────────────────────────
@@ -37,17 +40,13 @@ public sealed class MongoDbContext
         EnsureIndexes(settings);
     }
 
-    public IMongoCollection<ContactMessage> ContactMessages =>
-        _db.GetCollection<ContactMessage>("contact_messages");
+    public IMongoCollection<ContactMessage> ContactMessages => _db.GetCollection<ContactMessage>("contact_messages");
 
-    public IMongoCollection<Project> Projects =>
-        _db.GetCollection<Project>("projects");
+    public IMongoCollection<Project> Projects => _db.GetCollection<Project>("projects");
 
-    public IMongoCollection<SkillGroup> SkillGroups =>
-        _db.GetCollection<SkillGroup>("skill_groups");
+    public IMongoCollection<SkillGroup> SkillGroups => _db.GetCollection<SkillGroup>("skill_groups");
 
-    public IMongoCollection<ChatSession> ChatSessions =>
-        _db.GetCollection<ChatSession>("chat_sessions");
+    public IMongoCollection<ChatSession> ChatSessions =>  _db.GetCollection<ChatSession>("chat_sessions");
 
     // ── BSON class maps ────────────────────────────────────────────────────
     private static void RegisterClassMaps()

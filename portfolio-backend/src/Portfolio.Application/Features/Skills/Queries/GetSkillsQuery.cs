@@ -10,26 +10,24 @@ namespace Portfolio.Application.Features.Skills.Queries;
 public sealed record SkillDto(string Name, int Level);
 
 public sealed record SkillGroupDto(
-    string         Id,
-    string         GroupId,
-    string         Title,
-    string         Category,
-    string         AccentColor,
-    string         AccentBg,
-    string         IconPath,
+    string Id,
+    string GroupId,
+    string Title,
+    string Category,
+    string AccentColor,
+    string AccentBg,
+    string IconPath,
     List<SkillDto> Skills,
     List<string>   Tools,
-    int            SortOrder);
+    int SortOrder);
 
 // ── Get visible skill groups (public) ────────────────────────────────────────
 
 public sealed record GetVisibleSkillsQuery : IRequest<Result<List<SkillGroupDto>>>;
 
-public sealed class GetVisibleSkillsHandler(ISkillRepository repo)
-    : IRequestHandler<GetVisibleSkillsQuery, Result<List<SkillGroupDto>>>
+public sealed class GetVisibleSkillsHandler(ISkillRepository repo) : IRequestHandler<GetVisibleSkillsQuery, Result<List<SkillGroupDto>>>
 {
-    public async Task<Result<List<SkillGroupDto>>> Handle(
-        GetVisibleSkillsQuery _, CancellationToken ct)
+    public async Task<Result<List<SkillGroupDto>>> Handle(GetVisibleSkillsQuery _, CancellationToken ct)
     {
         var groups = await repo.GetAllVisibleAsync(ct);
         return groups.OrderBy(g => g.SortOrder).Select(ToDto).ToList();
@@ -52,11 +50,9 @@ public sealed class GetVisibleSkillsHandler(ISkillRepository repo)
 
 public sealed record GetAllSkillsQuery : IRequest<Result<List<SkillGroupDto>>>;
 
-public sealed class GetAllSkillsHandler(ISkillRepository repo)
-    : IRequestHandler<GetAllSkillsQuery, Result<List<SkillGroupDto>>>
+public sealed class GetAllSkillsHandler(ISkillRepository repo): IRequestHandler<GetAllSkillsQuery, Result<List<SkillGroupDto>>>
 {
-    public async Task<Result<List<SkillGroupDto>>> Handle(
-        GetAllSkillsQuery _, CancellationToken ct)
+    public async Task<Result<List<SkillGroupDto>>> Handle(GetAllSkillsQuery _, CancellationToken ct)
     {
         var groups = await repo.GetAllAsync(ct);
         return groups.OrderBy(g => g.SortOrder)

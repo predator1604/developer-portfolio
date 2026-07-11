@@ -34,8 +34,7 @@ public sealed class ProjectsController(ISender sender) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ProjectDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create(
-        [FromBody] CreateProjectCommand command, CancellationToken ct)
+    public async Task<IActionResult> Create([FromBody] CreateProjectCommand command, CancellationToken ct)
     {
         var result = await sender.Send(command, ct);
         return result.IsSuccess
@@ -46,10 +45,7 @@ public sealed class ProjectsController(ISender sender) : ControllerBase
     /// <summary>Update an existing project (admin).</summary>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ProjectDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Update(
-        string id,
-        [FromBody] UpdateProjectCommand command,
-        CancellationToken ct)
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateProjectCommand command, CancellationToken ct)
     {
         // Ensure route id matches body id
         var cmd = command with { Id = id };
