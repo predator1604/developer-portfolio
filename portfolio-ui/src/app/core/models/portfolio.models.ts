@@ -1,3 +1,5 @@
+import { LucideIconData } from "node_modules/lucide-angular/src/icons/icons/types";
+
 export interface PersonalInfo {
   label: string;
   value: string;
@@ -82,14 +84,14 @@ export interface Project {
 export interface ContactInfoItem {
   label: string;
   value: string;
-  iconPath: string;
+  icon: LucideIconData;
 }
 
 export interface SocialLink {
   id: string;
   label: string;
   href: string;
-  iconPath: string;
+  icon: LucideIconData;
 }
 
 export interface ContactFormValue {
