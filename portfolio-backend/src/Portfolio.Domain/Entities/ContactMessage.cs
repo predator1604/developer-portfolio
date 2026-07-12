@@ -56,7 +56,7 @@ public sealed class ContactMessage : BaseEntity
         ArgumentException.ThrowIfNullOrWhiteSpace(message);
 
         var entity = new ContactMessage(name, Email.Create(email), subject, message);
-        entity._domainEvents.Add(new MessageReceivedEvent(entity.Id, name, email));
+        entity._domainEvents.Add(new MessageReceivedEvent(entity.Id, name, email, subject, message));
         return entity;
     }
 
@@ -73,7 +73,7 @@ public sealed class ContactMessage : BaseEntity
     /// <summary>Attach an admin reply note and mark as replied.</summary>
     public void MarkAsReplied(string replyNote)
     {
-        ArgumentException.ThrowINullOrWhiteSpace(replyNote);
+        ArgumentException.ThrowIfNullOrWhiteSpace(replyNote);
         Status = MessageStatus.Replied;
         ReplyNote = replyNote;
         RepliedAt = DateTime.UtcNow;

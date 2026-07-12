@@ -108,6 +108,19 @@ public sealed class SemanticKernelChatService(IOptions<AiSettings> options, ILog
                 endpoint: _settings.Endpoint!,
                 apiKey: _settings.ApiKey);
         }
+        else if (_settings.Provider.Equals("Groq", StringComparison.OrdinalIgnoreCase))
+        {
+            var baseUrl = string.IsNullOrWhiteSpace(_settings.Endpoint)
+                ? "https://api.groq.com/openai/v1"
+                : _settings.Endpoint;
+
+            var httpClient = new HttpClient { BaseAddress = new Uri(baseUrl) };
+
+            builder.AddOpenAIChatCompletion(
+                modelId: _settings.ModelId,
+                apiKey: _settings.ApiKey,
+                httpClient: httpClient);
+        }
         else
         {
             builder.AddOpenAIChatCompletion(

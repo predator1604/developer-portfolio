@@ -63,7 +63,14 @@ public sealed class SendMessageHandler(IContactRepository  contactRepo, IEmailSe
             message.ClearDomainEvents();
 
             // 4. Send auto-reply confirmation to visitor
-            await emailService.SendContactConfirmationAsync(cmd.Email, cmd.Name, ct);
+            try
+            {
+                await emailService.SendContactConfirmationAsync(cmd.Email, cmd.Name, ct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to send contact confirmation email to {Email}, but message was saved.", cmd.Email);
+            }
 
             return Result<SendMessageResponse>.Success(
                 new SendMessageResponse(
